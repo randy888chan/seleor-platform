@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: NetworkPolicy
+metadata:
+  creationTimestamp: null
+  name: seleorplatform_saleor-backend-tier
+spec:
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          io.kompose.network/seleorplatform_saleor-backend-tier: "true"
+  podSelector:
+    matchLabels:
+      io.kompose.network/seleorplatform_saleor-backend-tier: "true"

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.21.0 ()
+  creationTimestamp: null
+  labels:
+    io.kompose.service: worker
+  name: worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: worker
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.21.0 ()
+      creationTimestamp: null
+      labels:
+        io.kompose.network/seleorplatform_saleor-backend-tier: "true"
+        io.kompose.service: worker
+    spec:
+      containers:
+      - args:
+        - celery
+        - -A
+        - saleor
+        - worker
+        - --app=saleor.celeryconf:app
+        - --loglevel=info
+        env:
+        - name: CELERY_BROKER_URL
+          value: redis://redis:6379/1
+        - name: DATABASE_URL
+          value: postgres://saleor:saleor@db/saleor
+        - name: DEFAULT_FROM_EMAIL
+          value: noreply@example.com
+        - name: EMAIL_URL
+          value: smtp://mailhog:1025
+        - name: SECRET_KEY
+          value: changeme
+        image: worker
+        imagePullPolicy: ""
+        name: worker
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
